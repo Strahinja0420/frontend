@@ -11,17 +11,17 @@ function App() {
           <img src="src/assets/logo.png" alt="logo" className="w-12 h-12" />
 
           {/* Auth buttons */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center font-bold space-x-4">
             <Link
               to="/login"
-              className="text-gray-700 hover:text-gray-900 transition-colors"
+              className="text-primary  hover:text-gray-900 transition-colors"
             >
               Log in
             </Link>
-            <span className="text-gray-400">or</span>
+            <span className="text-black font-light">or</span>
             <Link
               to="/register"
-              className="bg-blackk text-white px-6 py-2 rounded-full hover:bg-gray-900 transition-colors"
+              className="signup-button bg-blackk text-white font-light px-6 py-2 rounded-full hover:bg-gray-900 transition-colors"
             >
               Sign Up
             </Link>
@@ -29,22 +29,19 @@ function App() {
         </header>
 
         {/* Main content */}
-        <main className="flex flex-col items-center justify-center px-6 py-20">
-          <div className="max-w-2xl text-center">
+        <main className="main flex flex-col items-center justify-center px-8 py-[16px]">
+          <div className="w-auto  text-center">
             {/* Main heading */}
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-[64px] w-full font-bold text-primary mb-6">
               E-auctions made easy!
             </h1>
-
-            {/* Subtitle */}
-            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+            <p className="font-light text-primary leading-relaxed">
               Simple way for selling your unused products, or
               <br />
               getting a deal on product you want!
             </p>
-
-            {/* CTA button */}
-            <button className="bg-yellow-400 text-black font-semibold px-8 py-3 rounded-full hover:bg-yellow-500 transition-colors shadow-sm">
+            {/* Bid button */}
+            <button className="bid-button primary-yellow-bg text-primary font-semibold px-[16px] py-[8px]">
               Start bidding
             </button>
           </div>

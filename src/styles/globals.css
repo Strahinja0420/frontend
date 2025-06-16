@@ -1,0 +1,12 @@
+.text-primary{
+    color: var(--text-primary);
+}
+
+.primary-yellow-bg{
+    background-color: var(--primary-yellow);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+}
