@@ -8,7 +8,7 @@ function App() {
         {/* Header */}
         <header className="flex justify-between items-center p-6">
           {/* Logo */}
-          <img src="src/assets/logo.png" alt="logo" className="w-12 h-12" />
+          <img src="src/assets/images/logo.png" alt="logo" className="w-12 h-12" />
 
           {/* Auth buttons */}
           <div className="flex items-center font-bold space-x-4">
@@ -41,9 +41,9 @@ function App() {
               getting a deal on product you want!
             </p>
             {/* Bid button */}
-            <button className="bid-button primary-yellow-bg text-primary font-semibold px-[16px] py-[8px]">
+            <Link to={"/register"} className="bid-button primary-yellow-bg text-primary font-semibold px-[16px] py-[8px]">
               Start bidding
-            </button>
+            </Link>
           </div>
         </main>
       </div>
