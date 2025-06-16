@@ -6,6 +6,7 @@ import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Register from './pages/Register.tsx'
 import Login from './pages/Login.tsx'
+import ForgotPassword from './pages/ForgotPassword.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/login' element ={<Login/>}></Route>
       <Route path='/' element ={<App/>}></Route>
       <Route path='/register' element = {<Register/>}></Route>
+      <Route path='/forgotpass' element ={<ForgotPassword/>}></Route>
     </Routes>
     </BrowserRouter>
   </StrictMode>,
