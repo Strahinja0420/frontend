@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/Register.css";
-import Card from "../components/card/Card";
+import Card from "../components/cards/Card";
 import { Link } from "react-router-dom";
 
 const sampleAuction = {
