@@ -1,11 +1,13 @@
 export interface Auction {
-  name: string;
+  id: number;
 
-  price: number;
+  title: string;
 
-  image: string;
+  buyNowPrice: number;
 
-  endTime: string;
+  images: string;
 
-  edit: boolean;
+  endTime?: string ;
+
+  edit?: boolean;
 }

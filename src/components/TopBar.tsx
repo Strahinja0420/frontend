@@ -1,28 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
 const TopBar = () => {
+  const [activeTab, setActiveTab] = useState("profile");
+
   return (
     <div className="flex items-center p-3">
       <div className="text-2xl font-bold text-blue-600 pr-[10px]">
-        <img src="src/assets/images/logo.png" />
+        <Link to={"/"}>
+        <img className="w-12 h-12" src="src/assets/images/logo.png" />
+        </Link>
       </div>
 
       <div className="flex items-center space-x-0.5 bg-white p-2 rounded-[32px]">
         <div className="flex">
-          <button className="flex items-center px-4 py-2 bg-white text-black rounded-[32px]">
-            <img src="src/assets/icons/home.png" alt="" />
+          <NavLink
+            to="/auctions"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 rounded-[32px] transition-all duration-200 ease-in-out ${
+                isActive
+                  ? "bg-(--main-black-color) text-white"
+                  : "bg-white text-black hover:bg-gray-100"
+              }`
+            }
+            onClick={() => setActiveTab("auctions")}
+          >
+            <img className="bg-white rounded-2xl" src="src/assets/icons/home.png" alt="" />
             Auctions
-          </button>
+          </NavLink>
         </div>
         <div className="flex">
-          <button className="flex items-center px-4 py-2 bg-(--main-black-color) text-white rounded-[32px]">
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 rounded-[32px] transition-all duration-200 ease-in-out ${
+                isActive
+                  ? "bg-(--main-black-color) text-white"
+                  : "bg-white text-black hover:bg-gray-100"
+              }`
+            }
+            onClick={() => setActiveTab("profile")}
+          >
             <img
               className="bg-white rounded-2xl"
               src="src/assets/icons/Person.png"
               alt=""
             />
             Profile
-          </button>
+          </NavLink>
         </div>
       </div>
 
