@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { act, useState } from "react";
 import TopBar from "../components/TopBar";
 import StatCard from "../components/cards/StatCard";
+import MyAuctions from "../components/profile/MyAuctions";
+import MyBidding from "../components/profile/MyBidding";
+import MyWon from "../components/profile/MyWon";
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"myAuctions" | "bidding" | "won">(
@@ -59,6 +62,16 @@ const Profile: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {activeTab === "myAuctions" ? (
+          <MyAuctions />
+        ) : activeTab === "bidding" ? (
+          <MyBidding />
+        ) : activeTab === "won" ? (
+          <MyWon />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ const Card: React.FC<AuctionCardProps> = ({ auction }) => {
           {auction.title}
         </div>
         <div className="col-start-1 col-end-3 px-[8px] py-[4px]  text-primary font-bold">
-          {auction.buyNowPrice}€
+          {auction.startingBid}€
         </div>
         <div className="col-start-1 col-end-7 h-[150px] px-[8px] py-[4px]  text-primary">
           <img className="rounded-[8px] w-full h-full object-cover" 

@@ -3,7 +3,7 @@ export interface Auction {
 
   title: string;
 
-  buyNowPrice: number;
+  startingBid: number;
 
   images: string;
 

@@ -31,11 +31,9 @@ const LoginForm = () => {
         throw new Error(data.message || "Login failed");
       }
 
-      alert("Logged in successfully!");
-
       localStorage.setItem("token", data.access_token); //-----mozes cookie da koristis guglaj
 
-      navigate("/");
+      navigate("/profile");
     } catch (error: any) {
       console.error("Login error:", error.message);
       alert(error.message);
