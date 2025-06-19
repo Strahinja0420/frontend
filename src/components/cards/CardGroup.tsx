@@ -21,7 +21,7 @@ const CardGroup = () => {
   }, []);
   return (
     <div className="grid grid-cols-2 gap-6 justify-items-center">
-      {auctions.slice(0,4).map((a) => (
+      {auctions.slice(0, 4).map((a) => (
         <Card key={a.id} auction={a} />
       ))}
     </div>

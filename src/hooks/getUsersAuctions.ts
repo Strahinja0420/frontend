@@ -5,7 +5,7 @@ export const fetchUsersAuctions = async (): Promise<Auction[]> => {
   try {
     const token = localStorage.getItem("token");
     console.log(token);
-    
+
     const response = await fetch("http://localhost:5000/users/me/auctions", {
       headers: {
         Authorization: `Bearer ${token}`,

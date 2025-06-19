@@ -1,24 +1,24 @@
-.bg-blackk{
-    background-color: var(--main-black-color);
+.bg-blackk {
+  background-color: var(--main-black-color);
 }
 
-.signup-button{
-    width: 92px;
-    height: 40px;
-    min-height: 40px;
-    border-radius: 16px;
-    padding: 8px 16px;
-    gap: 8px;
+.signup-button {
+  width: 92px;
+  height: 40px;
+  min-height: 40px;
+  border-radius: 16px;
+  padding: 8px 16px;
+  gap: 8px;
 }
 
-.main{
-    position: relative;
-    gap: 8px;
-    top: 96px;
+.main {
+  position: relative;
+  gap: 8px;
+  top: 96px;
 }
 
-.bid-button{
-    position: relative;
-    top: 32px;
-    border-radius: 16px;
+.bid-button {
+  position: relative;
+  top: 32px;
+  border-radius: 16px;
 }

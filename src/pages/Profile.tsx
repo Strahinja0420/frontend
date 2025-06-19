@@ -1,14 +1,32 @@
-import React, { act, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 import TopBar from "../components/TopBar";
 import StatCard from "../components/cards/StatCard";
 import MyAuctions from "../components/profile/MyAuctions";
 import MyBidding from "../components/profile/MyBidding";
 import MyWon from "../components/profile/MyWon";
+import type { User } from "../types/types";
+import { fetchCurrentUser } from "../hooks/getCurrentUser";
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"myAuctions" | "bidding" | "won">(
-    "myAuctions"
+    "myAuctions",
   );
+  const [currentUser, setCurrentUser] = useState<User>();
+
+  useEffect(() => {
+    const loadCurrentUser = async () => {
+      try {
+        const data = await fetchCurrentUser();
+        console.log(data);
+
+        setCurrentUser(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    loadCurrentUser();
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -16,7 +34,10 @@ const Profile: React.FC = () => {
 
       <div className="max-w-screen mx-auto px-6 py-1">
         <h1 className="text-2xl font-bold text-(--text-primary) mb-2">
-          Hello Jamal Reces!
+          Hello{" "}
+          {currentUser
+            ? currentUser.firstName + " " + currentUser.lastName
+            : ""}
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 ">
