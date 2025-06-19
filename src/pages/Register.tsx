@@ -7,8 +7,8 @@ const Register: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-center h-screen">
-        <div className="flex overflow-hidden w-full h-full ">
-          <div className="w-3/4 flex items-center justify-center p-8">
+        <div className="flex w-full h-full overflow-hidden ">
+          <div className="flex items-center justify-center w-3/4 p-8">
             <CardGroup />
           </div>
 

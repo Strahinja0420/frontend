@@ -18,6 +18,10 @@ export interface User {
   id: number;
 
   firstName: string;
-
   lastName: string;
+
+  _count: {
+    createdAuctions: number;
+    bids: number;
+  };
 }

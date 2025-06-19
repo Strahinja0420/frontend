@@ -22,8 +22,8 @@ const ForgotPassword: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-center h-screen">
-        <div className="flex overflow-hidden w-full h-full ">
-          <div className="w-3/4 flex items-center justify-center p-8">
+        <div className="flex w-full h-full overflow-hidden ">
+          <div className="flex items-center justify-center w-3/4 p-8">
             <div className="grid grid-cols-2 gap-6 justify-items-center">
               {auctions.map((a) => (
                 <Card key={a.id} auction={a} />
@@ -45,7 +45,7 @@ const ForgotPassword: React.FC = () => {
 
             <form className="w-full space-y-4 flex-grow flex flex-col justify-stretch px-[8px] py-[16px]">
               <div className="flex flex-col items-center">
-                <h2 className="font-extrabold text-xl ">Forgot password?</h2>
+                <h2 className="text-xl font-extrabold ">Forgot password?</h2>
                 <p className="mb-8 text-center text-gray-600">
                   No worries, we will send you reset instructions.
                 </p>

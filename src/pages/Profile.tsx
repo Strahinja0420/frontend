@@ -42,8 +42,15 @@ const Profile: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 ">
           <StatCard title="Earnings" subtitle="All-time" value="324 €" />
-          <StatCard title="Posted auctions" subtitle="All-time" value="18" />
-          <StatCard title="Currently bidding" value="5" />
+          <StatCard
+            title="Posted auctions"
+            subtitle="All-time"
+            value={currentUser ? currentUser?._count.createdAuctions : 0}
+          />
+          <StatCard
+            title="Currently bidding"
+            value={currentUser ? currentUser?._count.bids : 0}
+          />
           <StatCard title="Currently winning" value="2" />
         </div>
 

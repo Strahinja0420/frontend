@@ -31,6 +31,7 @@ const LoginForm = () => {
         throw new Error(data.message || "Login failed");
       }
 
+      localStorage.clear();
       localStorage.setItem("token", data.access_token); //-----mozes cookie da koristis guglaj
 
       navigate("/profile");
