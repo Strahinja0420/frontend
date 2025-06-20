@@ -9,7 +9,7 @@ import { fetchCurrentUser } from "../hooks/getCurrentUser";
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"myAuctions" | "bidding" | "won">(
-    "myAuctions",
+    "myAuctions"
   );
   const [currentUser, setCurrentUser] = useState<User>();
 
@@ -32,15 +32,13 @@ const Profile: React.FC = () => {
     <div className="min-h-screen">
       <TopBar />
 
-      <div className="max-w-screen mx-auto px-6 py-1">
+      <div className="px-6 py-1 mx-auto max-w-screen">
         <h1 className="text-2xl font-bold text-(--text-primary) mb-2">
           Hello{" "}
-          {currentUser
-            ? currentUser.firstName + " " + currentUser.lastName
-            : ""}
+          {currentUser && currentUser.firstName + " " + currentUser.lastName}
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 ">
+        <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4 ">
           <StatCard title="Earnings" subtitle="All-time" value="324 €" />
           <StatCard
             title="Posted auctions"
@@ -54,8 +52,8 @@ const Profile: React.FC = () => {
           <StatCard title="Currently winning" value="2" />
         </div>
 
-        <div className=" pt-0">
-          <div className="flex space-x-8 items-center justify-center ">
+        <div className="pt-0 pb-3 ">
+          <div className="flex items-center justify-center space-x-8 ">
             <div className="bg-[#EDF4F2] rounded-[32px] py-1 px-1">
               <button
                 onClick={() => setActiveTab("myAuctions")}

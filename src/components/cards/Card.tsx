@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { Auction, User } from "../../types/types";
 import OutbidSmall from "../Tags/SmallTag";
 import SmallTimeTag from "../TimeTags/SmallTimeTag";
+import EditAuction from "../pop-ups/EditAuction"
 
 interface AuctionCardProps {
   auction: Auction;
@@ -14,6 +15,12 @@ const Card: React.FC<AuctionCardProps> = ({
   isCurrentUserOwner,
   refreshAuctions,
 }) => {
+  const [modal, setModal] = useState(false);
+
+  const toggleModal = () => {
+    setModal(!modal);
+  };
+
   const getHoursDifference = (startTime: Date, endTime: Date): number =>
     (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60);
 
@@ -37,7 +44,7 @@ const Card: React.FC<AuctionCardProps> = ({
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       if (!response.ok) {
@@ -78,7 +85,7 @@ const Card: React.FC<AuctionCardProps> = ({
         </div>
 
         {isAuctionActive && isCurrentUserOwner && (
-          <div className="flex row-end-6 col-span-7 justify-between p-2 bg-white mt-auto">
+          <div className="flex justify-between col-span-7 row-end-6 p-2 mt-auto bg-white">
             <button
               onClick={() => handleDeleteAuction(auction.id)}
               className="w-1/3 px-2 py-1 text-xs bg-white border-[1px] border-(--main-black-color) text-(--text-primary) rounded-[16px] hover:cursor-pointer "
@@ -86,13 +93,14 @@ const Card: React.FC<AuctionCardProps> = ({
               Icon
             </button>
             <button
-              onClick={(e) => {
-                // bring the edit pop-up window here
+              onClick={() => {
+                toggleModal()
               }}
               className="w-2/3 min-h-[40px] px-2 py-1 text-xs bg-(--main-black-color) font-medium text-[14px] text-white rounded-[16px] hover:cursor-pointer"
             >
               Edit
             </button>
+            {modal && <EditAuction auction={auction} onClose={() => toggleModal()}/>}
           </div>
         )}
       </div>

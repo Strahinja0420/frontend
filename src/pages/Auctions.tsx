@@ -4,8 +4,8 @@ import type { Auction } from "../types/types";
 import { fetchAuctions } from "../hooks/getAuctions";
 import Card from "../components/cards/Card";
 
-const Auctions = () => {
-  const [auctions, setAuctions] = useState<Auction[]>([]);
+const Auctions =  () => {
+   const [auctions, setAuctions] = useState<Auction[]>([]);
 
   useEffect(() => {
     const loadAuctions = async () => {
@@ -19,7 +19,9 @@ const Auctions = () => {
     };
 
     loadAuctions();
-  }, []);
+  }, []);  
+
+  /* const auctions = await fetchAuctions() */
 
   return (
     <>
@@ -39,7 +41,7 @@ const Auctions = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-6  gap-5">
+          <div className="grid grid-cols-6 gap-5">
             {auctions.map((auction) => (
               <Card key={auction.id} auction={auction} />
             ))}

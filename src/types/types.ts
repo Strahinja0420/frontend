@@ -12,6 +12,8 @@ export interface Auction {
   endTime?: string;
 
   edit?: boolean;
+
+  description: string;
 }
 
 export interface User {
