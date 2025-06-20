@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import AddAuction from "./pop-ups/addAuction";
+import AddAuction from "./pop-ups/AddAuction";
 
 const TopBar = () => {
   const [modal, setModal] = useState(false);
@@ -70,7 +70,7 @@ const TopBar = () => {
             />
             {/* <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span> */}
           </button>
-          <button className="px-2">
+          <div className="px-2">
             <button onClick={toggleModal} className="hover:cursor-pointer">
               <img
                 className="h-11 "
@@ -79,9 +79,9 @@ const TopBar = () => {
               />
             </button>
             {modal && (
-              <AddAuction  onClose={() => toggleModal()} />
+              <AddAuction  onClose={() => toggleModal() } />
             )}
-          </button>
+          </div>
           <div className="flex items-center justify-center bg-gray-300 rounded-full h-11 w-11">
             <span className="text-sm font-medium">JR</span>
           </div>

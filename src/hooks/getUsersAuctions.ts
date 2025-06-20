@@ -1,10 +1,9 @@
-import React from "react";
 import type { Auction } from "../types/types";
 
 export const fetchUsersAuctions = async (): Promise<Auction[]> => {
   try {
     const token = localStorage.getItem("token");
-    console.log(token);
+    // console.log(token);
 
     const response = await fetch("http://localhost:5000/users/me/auctions", {
       headers: {
@@ -18,6 +17,8 @@ export const fetchUsersAuctions = async (): Promise<Auction[]> => {
     return data;
   } catch (error) {
     console.error("something went wrong while fetching auctions");
+    console.log(error);
+    
     return [];
   }
 };

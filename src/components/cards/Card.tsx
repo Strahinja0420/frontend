@@ -31,7 +31,7 @@ const Card: React.FC<AuctionCardProps> = ({
   const endTime = new Date(auction.endTime);
   const isAuctionActive = currentTime < endTime;
 
-  console.log("Rendering card with auction:", auction);
+  // console.log("Rendering card with auction:", auction);
 
   const handleDeleteAuction = async (auctionId: number) => {
     try {

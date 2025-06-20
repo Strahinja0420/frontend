@@ -1,45 +1,52 @@
-import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { loginAPI } from "../../api/loginApi";
+
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must be at least 8 characters"),
+});
+
+type FormFields = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
   const navigate = useNavigate();
 
-  //TODO promeni native react funkcionalnost u react hook form.
-
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    // console.log(data);
+    
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      localStorage.clear();
-      localStorage.setItem("token", data.access_token); //-----mozes cookie da koristis guglaj
-
+      await loginAPI.login(data);
+      // console.log(data);
       navigate("/profile");
-    } catch (error: any) {
-      console.error("Login error:", error.message);
-      alert(error.message);
+    } catch (error) {
+      setError("root", {
+        type: "manual",
+        message: "Invalid email or password",
+      });
+      console.log(error);
+      
     }
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<FormFields>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
   return (
     <>
       <div className="register-form w-1/4 bg-white px-[8px] py-[16px] shadow-lg flex flex-col items-center h-full gap-[16px]">
@@ -52,11 +59,11 @@ const LoginForm = () => {
         </Link>
 
         <form
-          onSubmit={handleSubmit}
           className="w-full space-y-4 flex-grow flex flex-col justify-stretch px-[8px] py-[16px] pt-[60px]"
+          onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col items-center">
-            <h2 className="font-extrabold text-xl">Welcome back!</h2>
+            <h2 className="text-xl font-extrabold">Welcome back!</h2>
             <p className="mb-8 text-center text-gray-600">
               Please enter your details
             </p>
@@ -64,38 +71,47 @@ const LoginForm = () => {
           <div className="flex flex-col min-w-0 gap-1">
             <p>Email</p>
             <input
+              {...register("email")}
               type="email"
               name="email"
-              value={form.email}
-              onChange={handleChange}
               placeholder="E-mail"
               className="w-full border min-h-[40px] rounded-[16px] px-4 py-2"
+              aria-invalid={!!errors.email}
             />
+            {errors.email && (
+              <div className="text-red-500">{errors.email.message}</div>
+            )}
           </div>
           <div className="flex flex-col min-w-0 gap-1">
             <p>Password</p>
             <input
+              {...register("password")}
               type="password"
               name="password"
-              value={form.password}
-              onChange={handleChange}
               placeholder="Password"
               className="w-full border min-h-[40px] rounded-[16px] px-4 py-2"
             />
+            {errors.password && (
+              <div className="text-red-500">{errors.password.message}</div>
+            )}
           </div>
-          <div className="flex w-full justify-end">
+          <div className="flex justify-end w-full">
             <Link to={"/forgotpass"}>
-              <p className="text-gray-600 text-sm">Forgot password?</p>
+              <p className="text-sm text-gray-600">Forgot password?</p>
             </Link>
           </div>
 
+          {errors.root && (
+            <div className="text-red-500">{errors.root.message}</div>
+          )}
+
           <button
             type="submit"
-            className="w-full primary-yellow-bg text-primary font-bold px-[16px] py-[8px] rounded-[16px] hover:bg-yellow-400"
+            className="w-full primary-yellow-bg text-primary font-bold px-[16px] py-[8px] rounded-[16px] hover:bg-yellow-400 hover:cursor-pointer"
           >
-            Login
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
-          <p className="mt-auto text-sm text-gray-500 text-center">
+          <p className="mt-auto text-sm text-center text-gray-500">
             Don’t have an account?{" "}
             <Link to={"/register"} className="font-bold">
               Sign Up

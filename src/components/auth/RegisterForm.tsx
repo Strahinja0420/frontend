@@ -1,55 +1,61 @@
-import React, { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { registerAPI } from "../../api/registerApi";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const RegisterForm = () => {
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    repeatPassword: "",
+const registrationSchema = z
+  .object({
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email("Invalid email address"),
+    password: z.string().min(1, "Password is required"),
+    repeatPassword: z.string().min(1, "Please repeat the password"),
+  })
+  .refine((data) => data.password === data.repeatPassword, {
+    message: "Passwords don't match",
+    path: ["repeatPassword"],
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+export type RegistrationPayload = Omit<z.infer<typeof registrationSchema>, 'repeatPassword'>;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+type FormFields = z.infer<typeof registrationSchema>;
 
-    if (form.password !== form.repeatPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+const RegisterForm = () => {
+  const navigate = useNavigate();
 
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    console.log(data);
+    
     try {
-      console.log("Submitting form data:", form);
-      const response = await fetch("http://localhost:5000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          password: form.password,
-        }),
+      const {repeatPassword, ...registrationSchema} = data;
+
+      await registerAPI.register(registrationSchema);
+      console.log(data);
+      navigate("/profile");
+    } catch (error) {
+      setError("root", {
+        type: "manual",
+        message: "Invalid information",
       });
-
-      const navigate = useNavigate();
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
-
-      navigate("/");
-      alert("Registered successfully!");
-    } catch (error: any) {
-      console.error("Error registering user:", error.message);
-      alert(error.message);
     }
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<FormFields>({
+    resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
   return (
     <div className="register-form w-1/4 bg-white px-[8px] py-[16px] shadow-lg flex flex-col items-center h-full gap-[16px]">
       <Link to={"/"}>
@@ -57,80 +63,86 @@ const RegisterForm = () => {
       </Link>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="w-full space-y-4 flex-grow flex flex-col justify-stretch px-[8px] py-[16px]"
       >
         <div className="flex flex-col items-center">
-          <h2 className="font-extrabold text-xl ">Hello!</h2>
+          <h2 className="text-xl font-extrabold ">Hello!</h2>
           <p className="mb-8 text-center text-gray-600">
             Please enter your details
           </p>
         </div>
-        <div className="flex gap-4 w-full">
+        <div className="flex w-full gap-4">
           <div className="flex flex-col min-w-0 gap-1">
             <p>Name</p>
             <input
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
+              {...register("firstName")}
               type="text"
               placeholder="Name"
               className="flex-1 border min-h-[40px] min-w-0  rounded-[16px] px-4 py-2"
             />
+            {errors.firstName && (
+              <div className="text-red-500">{errors.firstName.message}</div>
+            )}
           </div>
           <div className="flex flex-col min-w-0 gap-1">
             <p>Surname</p>
             <input
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
+              {...register("lastName")}
               type="text"
               placeholder="Surname"
               className="flex-1 border min-h-[40px] min-w-0  rounded-[16px] px-4 py-2"
             />
+            {errors.lastName && (
+              <div className="text-red-500">{errors.lastName.message}</div>
+            )}
           </div>
         </div>
         <div className="flex flex-col min-w-0 gap-1">
           <p>Email</p>
           <input
-            name="email"
-            value={form.email}
-            onChange={handleChange}
+            {...register("email")}
             type="email"
             placeholder="E-mail"
             className="w-full border min-h-[40px]  rounded-[16px] px-4 py-2"
           />
+          {errors.email && (
+            <div className="text-red-500">{errors.email.message}</div>
+          )}
         </div>
         <div className="flex flex-col min-w-0 gap-1">
           <p>Password</p>
           <input
-            name="password"
-            value={form.password}
-            onChange={handleChange}
+            {...register("password")}
             type="password"
             placeholder="Password"
             className="w-full border min-h-[40px]  rounded-[16px] px-4 py-2"
           />
+          {errors.password && (
+            <div className="text-red-500">{errors.password.message}</div>
+          )}
         </div>
         <div className="flex flex-col min-w-0 gap-1">
           <p>Repeat Password</p>
           <input
-            name="repeatPassword"
-            value={form.repeatPassword}
-            onChange={handleChange}
+            {...register("repeatPassword")}
             type="password"
             placeholder="Repeat password"
             className="w-full border min-h-[40px]  rounded-[16px] px-4 py-2"
           />
+          {errors.repeatPassword && (
+            <div className="text-red-500">{errors.repeatPassword.message}</div>
+          )}
         </div>
 
         <button
           type="submit"
           className="w-full text-primary font-bold px-[16px] py-[8px] rounded-[16px] bg-(--primary-yellow) hover:bg-(--hover-yellow) cursor-pointer "
         >
-          Sign up
+          {isSubmitting ? "Signing up..." : "Sign up"}
         </button>
-        <p className="mt-auto text-sm text-gray-500 text-center">
+
+        <p className="mt-auto text-sm text-center text-gray-500">
           Already have an account?{" "}
           <Link to={"/login"} className="font-bold">
             Log in

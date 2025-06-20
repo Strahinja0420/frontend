@@ -43,11 +43,11 @@ const Profile: React.FC = () => {
           <StatCard
             title="Posted auctions"
             subtitle="All-time"
-            value={currentUser ? currentUser?._count.createdAuctions : 0}
+            value={currentUser ? currentUser?._count.createdAuctions : "0"}
           />
           <StatCard
             title="Currently bidding"
-            value={currentUser ? currentUser?._count.bids : 0}
+            value={currentUser ? currentUser?._count.bids : "0"}
           />
           <StatCard title="Currently winning" value="2" />
         </div>

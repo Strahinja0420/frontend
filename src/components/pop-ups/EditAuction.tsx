@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { fetchUsersAuctions } from "../../hooks/getUsersAuctions";
+import { useState } from "react";
 import type { Auction } from "../../types/types";
 
 interface AddAuctionProps {
