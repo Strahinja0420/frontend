@@ -4,6 +4,8 @@ import AddAuction from "./pop-ups/AddAuction";
 import ProfileSettings from "./pop-ups/ProfileSettings";
 import { Bell, User } from "lucide-react";
 import { House } from 'lucide-react';
+import logo from '../assets/images/logo.png'
+import plus from '../assets/images/button.png'
 
 const TopBar = () => {
   const [addAuctionModal, setAddAuctionModal] = useState(false);
@@ -13,7 +15,7 @@ const TopBar = () => {
     <div className="flex items-center p-3">
       <div className="text-2xl font-bold text-blue-600 pr-[10px]">
         <Link to={"/"}>
-          <img className="w-12 h-12" src="src/assets/images/logo.png" />
+          <img className="w-12 h-12" src={logo} />
         </Link>
       </div>
 
@@ -62,7 +64,7 @@ const TopBar = () => {
           onClick={() => setAddAuctionModal(!addAuctionModal)}
           className="hover:cursor-pointer "
         >
-          <img className="h-11 " src="src/assets/images/button.png" alt="" />
+          <img className="h-11 " src={plus} alt="" />
         </button>
         {addAuctionModal && (
           <AddAuction onClose={() => setAddAuctionModal(!addAuctionModal)} />
