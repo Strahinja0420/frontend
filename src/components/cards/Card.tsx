@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import type { Auction, User } from "../../types/types";
+import React, { useState } from "react";
+import type { Auction } from "../../types/types";
 import OutbidSmall from "../Tags/SmallTag";
 import SmallTimeTag from "../TimeTags/SmallTimeTag";
-import EditAuction from "../pop-ups/EditAuction"
+import EditAuction from "../pop-ups/EditAuction";
 
 interface AuctionCardProps {
   auction: Auction;
@@ -35,7 +35,7 @@ const Card: React.FC<AuctionCardProps> = ({
 
   const handleDeleteAuction = async (auctionId: number) => {
     try {
-      const token = await localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
       const response = await fetch(
         `http://localhost:5000/auctions/${auctionId}`,
@@ -94,13 +94,15 @@ const Card: React.FC<AuctionCardProps> = ({
             </button>
             <button
               onClick={() => {
-                toggleModal()
+                toggleModal();
               }}
               className="w-2/3 min-h-[40px] px-2 py-1 text-xs bg-(--main-black-color) font-medium text-[14px] text-white rounded-[16px] hover:cursor-pointer"
             >
               Edit
             </button>
-            {modal && <EditAuction auction={auction} onClose={() => toggleModal()}/>}
+            {modal && (
+              <EditAuction auction={auction} onClose={() => toggleModal()} />
+            )}
           </div>
         )}
       </div>

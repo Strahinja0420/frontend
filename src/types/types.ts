@@ -22,6 +22,8 @@ export interface User {
   firstName: string;
   lastName: string;
 
+  email: string;
+
   _count: {
     createdAuctions: number;
     bids: number;

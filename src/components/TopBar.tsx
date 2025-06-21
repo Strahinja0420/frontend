@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import AddAuction from "./pop-ups/AddAuction";
+import ProfileSettings from "./pop-ups/ProfileSettings";
 
 const TopBar = () => {
-  const [modal, setModal] = useState(false);
+  const [addAuctionModal, setAddAuctionModal] = useState(false);
+  const [profileSettings, setProfileSettings] = useState(false);
 
-  const toggleModal = () => {
-    setModal(!modal);
-  };
   return (
     <div className="flex items-center p-3">
       <div className="text-2xl font-bold text-blue-600 pr-[10px]">
@@ -71,20 +70,35 @@ const TopBar = () => {
             {/* <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span> */}
           </button>
           <div className="px-2">
-            <button onClick={toggleModal} className="hover:cursor-pointer">
+            <button
+              onClick={() => setAddAuctionModal(!addAuctionModal)}
+              className="hover:cursor-pointer"
+            >
               <img
                 className="h-11 "
                 src="src/assets/images/button.png"
                 alt=""
               />
             </button>
-            {modal && (
-              <AddAuction  onClose={() => toggleModal() } />
+            {addAuctionModal && (
+              <AddAuction
+                onClose={() => setAddAuctionModal(!addAuctionModal)}
+              />
             )}
           </div>
-          <div className="flex items-center justify-center bg-gray-300 rounded-full h-11 w-11">
-            <span className="text-sm font-medium">JR</span>
-          </div>
+          <button
+            onClick={() => setProfileSettings(!profileSettings)}
+            className="hover:cursor-pointer"
+          >
+            <div className="flex items-center justify-center bg-gray-300 rounded-full h-11 w-11">
+              <span className="text-sm font-medium">JR</span>
+            </div>
+          </button>
+          {profileSettings && (
+                <ProfileSettings
+                  onClose={() => setProfileSettings(!profileSettings)}
+                />
+              )}
         </div>
       </div>
     </div>

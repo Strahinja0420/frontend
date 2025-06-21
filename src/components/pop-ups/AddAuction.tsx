@@ -20,31 +20,27 @@ type FormFields = z.infer<typeof AddAuctionSchema>;
 
 const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log(data);
-
-    const file = data.images as FileList;
-    const fileName = file?.[0]?.name || "";
+    // console.log(data);
 
     const payload = {
       ...data,
-      images: fileName,
       endTime: new Date(data.endDate).toISOString(),
     };
-     console.log(payload);
+    console.log(payload);
 
-      try {
+    try {
       await addAuctionAPI.addAuction(payload);
-        if (onClose) {
+      if (onClose) {
         onClose();
       }
-       window.location.reload();  
+      window.location.reload();
     } catch (error) {
       setError("root", {
         type: "manual",
         message: "Invalid data",
       });
       console.log(error);
-    } 
+    }
   };
 
   const {
@@ -69,7 +65,11 @@ const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
             </p>
             <div className="p-4 py-10 bg-(--light-gray) text-center rounded-[16px] border-0 w-full">
               <input type="file" {...register("images")} id="image-upload" />
-              <label className=""></label>
+              <label className="">
+                <button className="p-2 border-black cursor-pointer border-1 rounded-[16px]">
+                  Add image
+                </button>
+              </label>
             </div>
 
             <div className="flex flex-col w-full gap-2">

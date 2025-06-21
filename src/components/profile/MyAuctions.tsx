@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Auction, User } from "../../types/types";
+import type { Auction } from "../../types/types";
 import { fetchUsersAuctions } from "../../hooks/getUsersAuctions";
 import Card from "../cards/Card";
 
@@ -11,7 +11,7 @@ const MyAuctions = () => {
       try {
         const data = await fetchUsersAuctions();
         console.log(data);
-        
+
         setAuction(data);
       } catch (error) {
         console.log(error);

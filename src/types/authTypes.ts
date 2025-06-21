@@ -19,3 +19,14 @@ export interface addAuctionData {
     endTime: string;
     category? : string;
 }
+
+export interface UpdateUserData{
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
+export interface UpdatePasswordData{
+  currentPassword: string;
+  newPassword: string;
+}
