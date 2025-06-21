@@ -19,14 +19,30 @@ const AddAuctionSchema = z.object({
 type FormFields = z.infer<typeof AddAuctionSchema>;
 
 const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<FormFields>({
+    resolver: zodResolver(AddAuctionSchema),
+    defaultValues: {
+      category: "OTHER",
+    },
+  });
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    // console.log(data);
+    if (!data.images) {
+      throw Error("No file selected");
+    }
+    console.log(data.images[0]);
 
     const payload = {
       ...data,
+      images: data.images[0],
       endTime: new Date(data.endDate).toISOString(),
     };
-    console.log(payload);
+    // console.log(payload);
 
     try {
       await addAuctionAPI.addAuction(payload);
@@ -42,18 +58,6 @@ const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
       console.log(error);
     }
   };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
-  } = useForm<FormFields>({
-    resolver: zodResolver(AddAuctionSchema),
-    defaultValues: {
-      category: "OTHER",
-    },
-  });
 
   return (
     <>

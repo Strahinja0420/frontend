@@ -71,10 +71,11 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => {
     <>
       <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-opacity-25 backdrop-blur-md ">
         <div className="flex flex-col items-center bg-white flex-column rounded-[16px] p-3 gap-3 min-w-[550px]">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <p className="text-[23px] text-(--text-primary) font-bold self-start">
+          <div className="w-full ">
+            <form onSubmit={handleSubmit(onSubmit)} className="p-0">
+            <h2 className="text-[23px] text-(--text-primary) font-bold self-start pb-3">
               Profile settings
-            </p>
+            </h2>
             <div className="flex w-full gap-4">
               <div className="flex flex-col w-full gap-2">
                 <label className="self-start" htmlFor="firstName">
@@ -120,7 +121,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => {
               )}
             </div>
           </form>
-          <div className="flex flex-col self-start">
+          <div className="flex flex-col self-start gap-3 py-3">
             <button
               type="button"
               className="self-start hover:cursor-pointer"
@@ -151,6 +152,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => {
             >
               Save Changes
             </button>
+          </div>
           </div>
         </div>
       </div>

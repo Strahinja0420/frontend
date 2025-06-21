@@ -3,6 +3,7 @@ import type { Auction } from "../../types/types";
 import OutbidSmall from "../Tags/SmallTag";
 import SmallTimeTag from "../TimeTags/SmallTimeTag";
 import EditAuction from "../pop-ups/EditAuction";
+import { Link } from "react-router-dom";
 
 interface AuctionCardProps {
   auction: Auction;
@@ -17,7 +18,8 @@ const Card: React.FC<AuctionCardProps> = ({
 }) => {
   const [modal, setModal] = useState(false);
 
-  const toggleModal = () => {
+  const toggleModal = (e: React.MouseEvent) => {
+    e.preventDefault();
     setModal(!modal);
   };
 
@@ -33,7 +35,11 @@ const Card: React.FC<AuctionCardProps> = ({
 
   // console.log("Rendering card with auction:", auction);
 
-  const handleDeleteAuction = async (auctionId: number) => {
+  const handleDeleteAuction = async (
+    e: React.MouseEvent,
+    auctionId: number
+  ) => {
+    e.preventDefault();
     try {
       const token = localStorage.getItem("token");
 
@@ -78,30 +84,40 @@ const Card: React.FC<AuctionCardProps> = ({
           {auction.startingBid}€
         </div>
         <div className="col-start-1 col-end-7 h-[150px] px-[8px] py-[4px]  text-primary">
-          <img
-            className="rounded-[8px] w-full h-full object-cover"
-            src={`http://localhost:5000/auctions/getimage/${auction.images}`}
-          ></img>
+          <Link className="hover:cursor-default" to={`/auction/${auction.id}`}>
+            <img
+              className="rounded-[8px] w-full h-full object-cover"
+              src={`http://localhost:5000/auctions/getimage/${auction.images}`}
+            ></img>
+          </Link>
         </div>
 
         {isAuctionActive && isCurrentUserOwner && (
           <div className="flex justify-between col-span-7 row-end-6 p-2 mt-auto bg-white">
             <button
-              onClick={() => handleDeleteAuction(auction.id)}
+              onClick={(e) => handleDeleteAuction(e, auction.id)}
               className="w-1/3 px-2 py-1 text-xs bg-white border-[1px] border-(--main-black-color) text-(--text-primary) rounded-[16px] hover:cursor-pointer "
             >
               Icon
             </button>
             <button
-              onClick={() => {
-                toggleModal();
+              onClick={(e) => {
+                toggleModal(e);
               }}
               className="w-2/3 min-h-[40px] px-2 py-1 text-xs bg-(--main-black-color) font-medium text-[14px] text-white rounded-[16px] hover:cursor-pointer"
             >
               Edit
             </button>
             {modal && (
-              <EditAuction auction={auction} onClose={() => toggleModal()} />
+              <EditAuction
+                auction={auction}
+                onClose={(e?: React.MouseEvent) => {
+                  if (e) {
+                    e.preventDefault();
+                    toggleModal(e);
+                  }
+                }}
+              />
             )}
           </div>
         )}

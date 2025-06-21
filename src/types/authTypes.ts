@@ -12,21 +12,28 @@ export interface RegisterFormData {
 }
 
 export interface addAuctionData {
-    images?: any ;
-    title: string;
-    description: string;
-    startingBid: string;
-    endTime: string;
-    category? : string;
+  images?: File;
+  title: string;
+  description: string;
+  startingBid: string;
+  endTime: string;
+  category?: string;
 }
 
-export interface UpdateUserData{
-    firstName: string;
-    lastName: string;
-    email: string;
+export interface updateAuctionData {
+  images?: File;
+  title: string;
+  description: string;
+  endTime: string;
 }
 
-export interface UpdatePasswordData{
+export interface UpdateUserData {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface UpdatePasswordData {
   currentPassword: string;
   newPassword: string;
 }

@@ -3,7 +3,7 @@ import type { User } from "../types/types";
 export const fetchCurrentUser = async (): Promise<User> => {
   try {
     const token = localStorage.getItem("token");
-    console.log(localStorage);
+    // console.log(localStorage);
     
     
     

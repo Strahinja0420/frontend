@@ -1,15 +1,21 @@
 import axios from "axios";
-import type { addAuctionData } from "../types/authTypes";
+import type { updateAuctionData } from "../types/authTypes";
 
-export const addAuctionAPI = {
-  async addAuction(payload: addAuctionData) {
+export const updateAuctionAPI = {
+  async update(auctionId: number, credentials: updateAuctionData) {
     try {
       const token = localStorage.getItem("token");
 
-      //  console.log(payload);
+       const payload = {
+        id: auctionId,
+        ...credentials
+       }
+
+       console.log(payload);
+       
       
 
-       await axios.post(`http://localhost:5000/auctions`, payload, {
+       await axios.patch(`http://localhost:5000/auctions/update`, payload, {
         headers: {
           "Content-Type" : "multipart/form-data",
           Authorization: `Bearer ${token}`,
