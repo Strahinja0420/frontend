@@ -14,6 +14,20 @@ export interface Auction {
   edit?: boolean;
 
   description: string;
+
+  bids: Bid[];
+
+  creator: {
+    id: number;
+    username: null;
+    firstName: string;
+    lastName: string;
+  };
+
+  _count: {
+    createdAuctions: number;
+    bids: number;
+  };
 }
 
 export interface User {
@@ -28,4 +42,13 @@ export interface User {
     createdAuctions: number;
     bids: number;
   };
+}
+
+export interface Bid {
+  id: number;
+  amount: number;
+  auctionId: number;
+  bidderId: number;
+  createdAt: string;
+  bidder?: User;
 }

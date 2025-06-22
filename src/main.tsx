@@ -21,7 +21,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/forgotpass" element={<ForgotPassword />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/auctions" element={<Auctions />}></Route>
-        <Route path="/auction/:id" element={<AuctionDetails />}></Route>
+        <Route path="/auction/:auctionId" element={<AuctionDetails />}></Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,

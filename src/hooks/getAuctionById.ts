@@ -1,11 +1,30 @@
-export const fetchAuctionById = async (auctionId: number) => {
-  try {
-    const response = await fetch(`http://localhost:5000/auctions/${auctionId}`);
-    if (!response.ok) {
-      throw new Error('Auction not found');
+import axios from "axios";
+
+export const auctionAPI = {
+  async getAuctionById(id : number) {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(`http://localhost:5000/auctions/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.data || typeof response.data !== "object") {
+        throw new Error("Invalid auction data received");
+      }
+      
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || "Failed to fetch auction by ID."
+        );
+      }
+      throw error;
     }
-    return response.json();
-  } catch (error) {
-    console.error(`Error fetching auction:${auctionId}`, error);
-  }
+  },
 };
