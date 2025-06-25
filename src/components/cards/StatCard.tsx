@@ -19,7 +19,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, subtitle, value }) => {
           </p>
         )}
       </div>
-      <p className="text-[80px] font-bold text-(--text-primary) group-hover:text-(--primary-yellow)">
+      <p className={`text-[80px] font-bold text-(--text-primary) group-hover:text-(--primary-yellow) ${title === 'Currently winning' && 'text-green-300'} `}>
         {value}
       </p>
     </div>

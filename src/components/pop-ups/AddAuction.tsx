@@ -134,7 +134,7 @@ const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
                 </label>
                 <input
                   {...register("endDate")}
-                  type="date"
+                  type="datetime-local"
                   id="endDate"
                   className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
                 />

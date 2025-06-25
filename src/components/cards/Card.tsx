@@ -17,6 +17,12 @@ const Card: React.FC<AuctionCardProps> = ({
   refreshAuctions,
 }) => {
   const [modal, setModal] = useState(false);
+  // console.log(auction);
+  
+  
+  if (!auction) {
+    throw Error('nema aukcije')
+  }
 
   const toggleModal = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -64,17 +70,20 @@ const Card: React.FC<AuctionCardProps> = ({
     }
   };
 
+  // console.log('Before passing to SmallTimeTag:', auction);
+  // return <SmallTimeTag auction={auction} />;
+
   return (
     <>
-      <div className="grid grid-cols-6 row-cols-auto gap-0 h-auto min-h-[250px] w-[216px] min-w-[216px] bg-white rounded-[16px] align-middle overflow-hidden shadow-2xl ">
-        <div className="col-start-1 col-end-3 flex items-center justify-start pl-[8px] ">
-          <OutbidSmall />
+      <div className="grid grid-cols-6 row-cols-auto gap-0 h-auto min-h-[250px] w-[216px] min-w-[216px] bg-white rounded-[16px] align-middle overflow-hidden shadow-2xl pt-1 ">
+        <div className="col-start-1 col-end-3 flex items-center justify-start pl-[8px]  ">
+          <OutbidSmall auction={auction} />
         </div>
-        <div className="col-span-2 col-end-7 px-[8px] py-[4px] text-primary">
+        <div className="col-span-1 col-end-6 ml-2 text-primary">
           {getHoursDifference(currentTime, endTime) > 24 ? (
-            <SmallTimeTag time={"24h"} />
+            <SmallTimeTag auction={auction} />
           ) : (
-            <SmallTimeTag time={"2d"} />
+            <SmallTimeTag auction={auction} />
           )}
         </div>
         <div className="col-span-7 px-[8px] py-[4px]  text-primary">

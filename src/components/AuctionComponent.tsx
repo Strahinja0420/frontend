@@ -46,27 +46,24 @@ const AuctionComponent = () => {
     loadAuction();
   }, [auctionId]);
 
-  console.log(auction);
+  // console.log(auction);
 
   useEffect(() => {
     if (!auction?.bids?.length) return;
 
     const fetchAllBidders = async () => {
       try {
-        // Create array of bidderIds that need fetching (where bidder info is missing)
         const bidderIdsToFetch = auction.bids
           .filter((bid) => !bid.bidder && bid.bidderId)
           .map((bid) => bid.bidderId);
 
         if (bidderIdsToFetch.length === 0) return;
 
-        // Fetch all missing bidders in parallel
         const biddersPromises = bidderIdsToFetch.map((bidderId) =>
           Bidder.getBidderInfo(bidderId)
         );
         const fetchedBidders = await Promise.all(biddersPromises);
 
-        // Update auction state with bidder info
         setAuction((prev) => {
           if (!prev) return null;
 
@@ -96,7 +93,7 @@ const AuctionComponent = () => {
     fetchAllBidders();
   }, [auction?.bids]);
 
-  console.log(bidderInfo);
+  // console.log(bidderInfo);
 
   const {
     register,
@@ -182,12 +179,8 @@ const AuctionComponent = () => {
           <div className="px-3 pt-3 ">
             <div className="flex items-center justify-between w-full">
               {" "}
-              <OutbidSmall />
-              {getHoursDifference(currentTime, endTime) > 24 ? (
-                <SmallTimeTag time={"24h"} />
-              ) : (
-                <SmallTimeTag time={"2d"} />
-              )}
+              <OutbidSmall auction={auction} />
+              <SmallTimeTag auction={auction}/>
             </div>
 
             <p className="text-[32px] font-bold text-black pt-1">
@@ -198,52 +191,58 @@ const AuctionComponent = () => {
               {auction.description}
             </p>
 
-            <div className="flex pt-2 ">
-              <div className="bg-[#EDF4F2]  rounded-[32px]">
-                <button
-                  onClick={() => setActiveTab("bid")}
-                  className={`w-[97px] h-[40px] font-medium rounded-[16px] transition-all duration-200 ease-in-out ${
-                    activeTab === "bid"
-                      ? "bg-(--main-black-color) text-white"
-                      : "text-(--text-primary) hover:text-white hover:bg-(--main-black-color)"
-                  }`}
-                >
-                  Bid
-                </button>
-                <button
-                  onClick={() => setActiveTab("auto-bid")}
-                  className={`w-[97px] h-[40px] font-medium rounded-[16px] transition-all duration-200 ease-in-out ${
-                    activeTab === "auto-bid"
-                      ? "bg-(--main-black-color) text-white"
-                      : "text-(--text-primary) hover:text-white hover:bg-(--main-black-color)"
-                  }`}
-                >
-                  Auto bid
-                </button>
-              </div>
-            </div>
+            {auction.status === "ENDED" ? (
+              "Sorry the auction ended you cant bid anymore"
+            ) : (
+              <>
+                <div className="flex pt-2 ">
+                  <div className="bg-[#EDF4F2]  rounded-[32px]">
+                    <button
+                      onClick={() => setActiveTab("bid")}
+                      className={`w-[97px] h-[40px] font-medium rounded-[16px] transition-all duration-200 ease-in-out ${
+                        activeTab === "bid"
+                          ? "bg-(--main-black-color) text-white"
+                          : "text-(--text-primary) hover:text-white hover:bg-(--main-black-color)"
+                      }`}
+                    >
+                      Bid
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("auto-bid")}
+                      className={`w-[97px] h-[40px] font-medium rounded-[16px] transition-all duration-200 ease-in-out ${
+                        activeTab === "auto-bid"
+                          ? "bg-(--main-black-color) text-white"
+                          : "text-(--text-primary) hover:text-white hover:bg-(--main-black-color)"
+                      }`}
+                    >
+                      Auto bid
+                    </button>
+                  </div>
+                </div>
 
-            <div className="flex items-end justify-end pt-3 ">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <label className="pr-2">Bid:</label>
-                <input
-                  {...register("bid")}
-                  className="rounded-[16px] border-1 w-[83px] border-gray-200 p-2 mr-2 max-h-[40px] min-h-[40px]"
-                  type="string"
-                  id="title"
-                  placeholder="Bid"
-                />
-                {errors.bid && (
-                  <div className="text-red-500">{errors.bid.message}</div>
-                )}
-                <button
-                  type="submit"
-                  className="primary-yellow-bg text-primary font-medium px-[16px] py-[8px] rounded-[16px] hover:bg-yellow-400 hover:cursor-pointer"
-                >
-                  Place bid
-                </button>
-              </form>
-            </div>
+                <div className="flex items-end justify-end pt-3 ">
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <label className="pr-2">Bid:</label>
+                    <input
+                      {...register("bid")}
+                      className="rounded-[16px] border-1 w-[83px] border-gray-200 p-2 mr-2 max-h-[40px] min-h-[40px]"
+                      type="string"
+                      id="title"
+                      placeholder="Bid"
+                    />
+                    {errors.bid && (
+                      <div className="text-red-500">{errors.bid.message}</div>
+                    )}
+                    <button
+                      type="submit"
+                      className="primary-yellow-bg text-primary font-medium px-[16px] py-[8px] rounded-[16px] hover:bg-yellow-400 hover:cursor-pointer"
+                    >
+                      Place bid
+                    </button>
+                  </form>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

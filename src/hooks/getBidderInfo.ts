@@ -22,4 +22,26 @@ export const Bidder = {
       throw error;
     }
   },
+
+  async getCurrentlyBidding() {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `http://localhost:5000/users/me/bidding`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || 'Failed to fetch bidder info'
+        );
+      }
+      throw error;
+    }
+  },
 };

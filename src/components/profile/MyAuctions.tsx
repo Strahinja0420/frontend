@@ -10,7 +10,7 @@ const MyAuctions = () => {
     const loadMyAuctions = async () => {
       try {
         const data = await fetchUsersAuctions();
-        console.log(data);
+        // console.log(data);
 
         setAuction(data);
       } catch (error) {
@@ -25,6 +25,9 @@ const MyAuctions = () => {
     const data = await fetchUsersAuctions();
     setAuction(data);
   };
+
+  // console.log(auction);
+  
 
   return (
     <>

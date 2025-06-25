@@ -17,6 +17,10 @@ export interface Auction {
 
   bids: Bid[];
 
+  status : string;
+
+  highestBidder : number;
+
   creator: {
     id: number;
     username: null;
@@ -37,6 +41,8 @@ export interface User {
   lastName: string;
 
   email: string;
+
+  bids: Bid[]
 
   _count: {
     createdAuctions: number;
