@@ -3,7 +3,7 @@ import type { Auction, User } from "../../types/types";
 import { fetchUsersAuctions } from "../../hooks/getUsersAuctions";
 import Card from "../cards/Card";
 import { Bidder } from "../../hooks/getBidderInfo";
-import { fetchCurrentUser } from "../../hooks/getCurrentUser";
+import { Users } from "../../hooks/getCurrentUser";
 
 const MyAuctions = () => {
   const [auction, setAuction] = useState<Auction[]>([]);
@@ -12,7 +12,7 @@ const MyAuctions = () => {
   useEffect(() => {
     const loadCurrentUser = async () => {
       try {
-        const user = await fetchCurrentUser();
+        const user = await Users.fetchCurrentUser();
         setCurrentUser(user);
       } catch (error) {
         console.log(error);
@@ -58,7 +58,7 @@ const MyAuctions = () => {
           )}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center h-[calc(100vh-200px)]">
+        <div className="flex flex-col items-center justify-center h-full pt-6 text-center">
           <p className="text-center text-[32px] font-bold text-(--text-primary)">
             Nothing here yet?
           </p>

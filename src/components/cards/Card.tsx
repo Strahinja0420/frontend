@@ -80,11 +80,7 @@ const Card: React.FC<AuctionCardProps> = ({
           <OutbidSmall auction={auction} />
         </div>
         <div className="col-span-1 col-end-6 ml-2 text-primary">
-          {getHoursDifference(currentTime, endTime) > 24 ? (
-            <SmallTimeTag auction={auction} />
-          ) : (
-            <SmallTimeTag auction={auction} />
-          )}
+          <SmallTimeTag auction={auction}/>
         </div>
         <div className="col-span-7 px-[8px] py-[4px]  text-primary">
           {auction.title}

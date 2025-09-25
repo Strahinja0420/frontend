@@ -192,7 +192,7 @@ const AuctionComponent = () => {
             </p>
 
             {auction.status === "ENDED" ? (
-              "Sorry the auction ended you cant bid anymore"
+              <div className="flex items-center justify-center w-full h-full text-center text-[16px] font-bold">You cant bid on this auction anymore.</div>
             ) : (
               <>
                 <div className="flex pt-2 ">

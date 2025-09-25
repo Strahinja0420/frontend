@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import ChangePassword from "./ChangePassword";
-import { fetchCurrentUser } from "../../hooks/getCurrentUser";
+import { Users } from "../../hooks/getCurrentUser";
 import type { User } from "../../types/types";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserAPI } from "../../api/updateUserApi";
+import { Eye } from "lucide-react";
 
 interface ProfileSettingsProps {
   onClose: () => void;
@@ -39,7 +40,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const currentUser = await fetchCurrentUser();
+        const currentUser = await Users.fetchCurrentUser();
         setUser(currentUser);
         setValue("firstName", currentUser.firstName);
         setValue("lastName", currentUser.lastName);
@@ -73,86 +74,94 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => {
         <div className="flex flex-col items-center bg-white flex-column rounded-[16px] p-3 gap-3 min-w-[550px]">
           <div className="w-full ">
             <form onSubmit={handleSubmit(onSubmit)} className="p-0">
-            <h2 className="text-[23px] text-(--text-primary) font-bold self-start pb-3">
-              Profile settings
-            </h2>
-            <div className="flex w-full gap-4">
-              <div className="flex flex-col w-full gap-2">
-                <label className="self-start" htmlFor="firstName">
-                  Name
-                </label>
-                <input
-                  {...register("firstName")}
-                  className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
-                  type="text"
-                  id="firstName"
-                />
-                {errors.firstName && (
-                  <div className="text-red-500">{errors.firstName.message}</div>
-                )}
+              <h2 className="text-[23px] text-(--text-primary) font-bold self-start pb-3">
+                Profile settings
+              </h2>
+              <div className="flex w-full gap-4">
+                <div className="flex flex-col w-full gap-2">
+                  <label
+                    className="self-start text-[16px] font-light"
+                    htmlFor="firstName"
+                  >
+                    Name
+                  </label>
+                  <input
+                    {...register("firstName")}
+                    className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
+                    type="text"
+                    id="firstName"
+                  />
+                  {errors.firstName && (
+                    <div className="text-red-500">
+                      {errors.firstName.message}
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col w-full gap-2">
+                  <label className="self-start text-[16px]" htmlFor="lastName">
+                    Surname
+                  </label>
+                  <input
+                    {...register("lastName")}
+                    className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
+                    type="text"
+                    id="lastName"
+                  />
+                  {errors.lastName && (
+                    <div className="text-red-500">
+                      {errors.lastName.message}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex flex-col w-full gap-2">
-                <label className="self-start" htmlFor="lastName">
-                  Surname
+                <label className="self-start text-[16px]" htmlFor="email">
+                  Email
                 </label>
                 <input
-                  {...register("lastName")}
+                  {...register("email")}
                   className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
                   type="text"
-                  id="lastName"
+                  id="email"
                 />
-                {errors.lastName && (
-                  <div className="text-red-500">{errors.lastName.message}</div>
+
+                {errors.email && (
+                  <div className="text-red-500">{errors.email.message}</div>
                 )}
               </div>
-            </div>
-            <div className="flex flex-col w-full gap-2">
-              <label className="self-start" htmlFor="email">
-                Email
-              </label>
-              <input
-                {...register("email")}
-                className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
-                type="text"
-                id="email"
-              />
-              {errors.email && (
-                <div className="text-red-500">{errors.email.message}</div>
+            </form>
+            <div className="flex flex-col self-start gap-3 py-3">
+              <button
+                type="button"
+                className="self-start text-(--text-primary)  hover:cursor-pointer hover:opacity-80 font-medium"
+                onClick={() => setChangePassword(!changePassword)}
+              >
+                Change password
+              </button>
+              {changePassword && (
+                <ChangePassword
+                  onClose={() => setChangePassword(!changePassword)}
+                />
               )}
+              <button type="button" className="self-start font-medium">
+                Change profile picture
+              </button>
             </div>
-          </form>
-          <div className="flex flex-col self-start gap-3 py-3">
-            <button
-              type="button"
-              className="self-start hover:cursor-pointer"
-              onClick={() => setChangePassword(!changePassword)}
-            >
-              Change password
-            </button>
-            {changePassword && (
-              <ChangePassword
-                onClose={() => setChangePassword(!changePassword)}
-              />
-            )}
-            <button type="button" className="self-start">
-              Change profile picture
-            </button>
-          </div>
-          <div className="flex justify-end w-full gap-3">
-            <button
-              type="button"
-              className="bg-(--light-gray) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-(--primary-yellow) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer"
-            >
-              Save Changes
-            </button>
-          </div>
+            <div className="flex justify-end w-full gap-3">
+              <button
+                type="button"
+                className="bg-(--light-gray) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer hover:scale-105"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-(--primary-yellow) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer hover:scale-105"
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       </div>

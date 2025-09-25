@@ -1,11 +1,11 @@
-import React, { act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopBar from "../components/TopBar";
 import StatCard from "../components/cards/StatCard";
 import MyAuctions from "../components/profile/MyAuctions";
 import MyBidding from "../components/profile/MyBidding";
 import MyWon from "../components/profile/MyWon";
 import type { Auction, User } from "../types/types";
-import { fetchCurrentUser } from "../hooks/getCurrentUser";
+import { Users } from "../hooks/getCurrentUser";
 import { Bidder } from "../hooks/getBidderInfo";
 
 const Profile: React.FC = () => {
@@ -14,11 +14,12 @@ const Profile: React.FC = () => {
   );
   const [currentUser, setCurrentUser] = useState<User>();
   const [auction, setAuction] = useState<Auction[]>([]);
+  const [earnings, setEarnings] = useState(0);
 
   useEffect(() => {
     const loadCurrentUser = async () => {
       try {
-        const data = await fetchCurrentUser();
+        const data = await Users.fetchCurrentUser();
         // console.log(data);
 
         setCurrentUser(data);
@@ -31,28 +32,42 @@ const Profile: React.FC = () => {
   }, []);
 
   useEffect(() => {
-      const loadBiddingAuctions = async () => {
-        try {
-          const data = await Bidder.getCurrentlyBidding();
-          // console.log(data);
-          
-          setAuction(data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-  
-      loadBiddingAuctions();
-    }, []);
+    const loadBiddingAuctions = async () => {
+      try {
+        const data = await Bidder.getCurrentlyBidding();
+        // console.log(data);
 
-    let currentlyWinning = 0;
-
-    for (let i = 0; i < auction.length; i++) {
-      if (auction[i].highestBidder === currentUser?.id) {
-        currentlyWinning++
+        setAuction(data);
+      } catch (error) {
+        console.log(error);
       }
-      
+    };
+
+    loadBiddingAuctions();
+  }, []);
+
+  useEffect(() => {
+    const loadEarnings = async () => {
+      try {
+        const data = await Users.earnings();
+        setEarnings(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    loadEarnings();
+  }, []);
+
+  // console.log(earnings);
+
+  let currentlyWinning = 0;
+
+  for (let i = 0; i < auction.length; i++) {
+    if (auction[i].highestBidder === currentUser?.id) {
+      currentlyWinning++;
     }
+  }
 
   return (
     <div className="min-h-screen">
@@ -65,7 +80,11 @@ const Profile: React.FC = () => {
         </h1>
 
         <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4 ">
-          <StatCard title="Earnings" subtitle="All-time" value="0 €" />
+          <StatCard
+            title="Earnings"
+            subtitle="All-time"
+            value={`${earnings}€`}
+          />
           <StatCard
             title="Posted auctions"
             subtitle="All-time"
@@ -73,7 +92,7 @@ const Profile: React.FC = () => {
           />
           <StatCard
             title="Currently bidding"
-            value={auction? auction.length : "0"}
+            value={auction ? auction.length : "0"}
           />
           <StatCard title="Currently winning" value={currentlyWinning} />
         </div>

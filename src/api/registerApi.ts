@@ -1,5 +1,4 @@
 import axios from "axios";
-import type { RegisterFormData } from "../types/authTypes";
 import type { RegistrationPayload } from "../components/auth/RegisterForm";
 
 export const registerAPI = {
@@ -9,20 +8,24 @@ export const registerAPI = {
         `http://localhost:5000/auth/register`,
         credentials,
         {
-          headers: { "Content-Type ": "application/json" },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
-      const token = response.data.token;
-      console.log("token");
+      console.log("Registration API response:", response.data);
       
-
+      const token = response.data.token;
+      
       if (token) {
         localStorage.removeItem("token");
         localStorage.setItem("token", token);
-
-        return response.data;
+        console.log("Token stored in localStorage");
+      } else {
+        console.warn("No token received from server");
       }
+
+      return response.data;
+      
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Full error response:", {

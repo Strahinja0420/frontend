@@ -4,6 +4,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { changePasswordAPI } from "../../api/changePasswordApi";
 import { useNavigate } from "react-router-dom";
+import { Eye } from "lucide-react";
 
 interface ChangePasswordProps {
   onClose: () => void;
@@ -42,16 +43,15 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onClose }) => {
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
       // console.log(data);
-      
 
       changePasswordAPI.update({
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       });
-       if (onClose) {
+      if (onClose) {
         onClose();
       }
-      navigate("/login"); 
+      navigate("/login");
     } catch (error) {
       setError("root", {
         type: "manual",
@@ -74,12 +74,29 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onClose }) => {
               <label className="self-start" htmlFor="currentPassword">
                 Current Password
               </label>
-              <input
-                {...register("currentPassword")}
-                className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
-                type="text"
-                id="currentPassword"
-              />
+              <div className="relative">
+                <input
+                  {...register("currentPassword")}
+                  className="w-full rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px] pr-10"
+                  type="password"
+                  id="currentPassword"
+                />
+                <button
+                  type="button"
+                  className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
+                  onClick={() => {
+                    const input = document.getElementById(
+                      "currentPassword"
+                    ) as HTMLInputElement;
+                    if (input) {
+                      input.type =
+                        input.type === "password" ? "text" : "password";
+                    }
+                  }}
+                >
+                  <Eye className="w-5 h-5" />
+                </button>
+              </div>
               {errors.currentPassword && (
                 <div className="text-red-500">
                   {errors.currentPassword.message}
@@ -90,12 +107,29 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onClose }) => {
               <label className="self-start" htmlFor="newPassword">
                 New Password
               </label>
-              <input
-                className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
-                type="text"
-                id="newPassword"
-                {...register("newPassword")}
-              />
+              <div className="relative">
+                <input
+                  className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px] w-full"
+                  type="password"
+                  id="newPassword"
+                  {...register("newPassword")}
+                />
+                <button
+                  type="button"
+                  className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
+                  onClick={() => {
+                    const input = document.getElementById(
+                      "newPassword"
+                    ) as HTMLInputElement;
+                    if (input) {
+                      input.type =
+                        input.type === "password" ? "text" : "password";
+                    }
+                  }}
+                >
+                  <Eye className="w-5 h-5" />
+                </button>
+              </div>
               {errors.newPassword && (
                 <div className="text-red-500">{errors.newPassword.message}</div>
               )}
@@ -105,12 +139,29 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onClose }) => {
               <label className="self-start" htmlFor="repeatNewPassword">
                 Repeat New Password
               </label>
-              <input
-                className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px]"
-                type="text"
-                id="repeatNewPassword"
-                {...register("repeatPassword")}
-              />
+              <div className="relative">
+                <input
+                  className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px] w-full"
+                  type="password"
+                  id="repeatNewPassword"
+                  {...register("repeatPassword")}
+                />
+                <button
+                  type="button"
+                  className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
+                  onClick={() => {
+                    const input = document.getElementById(
+                      "repeatNewPassword"
+                    ) as HTMLInputElement;
+                    if (input) {
+                      input.type =
+                        input.type === "password" ? "text" : "password";
+                    }
+                  }}
+                >
+                  <Eye className="w-5 h-5" />
+                </button>
+              </div>
               {errors.repeatPassword && (
                 <div className="text-red-500">
                   {errors.repeatPassword.message}
@@ -125,14 +176,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onClose }) => {
             <div className="flex justify-end w-full gap-3">
               <button
                 type="button"
-                className="bg-(--light-gray) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer"
+                className="bg-(--light-gray) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer hover:scale-105 "
                 onClick={onClose}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="bg-(--primary-yellow) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer"
+                className="bg-(--primary-yellow) rounded-[16px] text-(--text-primary) font-medium text-[16px] p-2 hover:cursor-pointer hover:scale-105"
               >
                 Save Changes
               </button>

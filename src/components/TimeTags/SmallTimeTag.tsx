@@ -8,56 +8,52 @@ interface TimeTagProps {
 
 type TimeLeft = {
   value: number;
-  unit: 'h' | 'd';
+  unit: "d" | "h" | "m";
 };
 
 const SmallTimeTag: React.FC<TimeTagProps> = ({ auction }) => {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ 
-    value: 0, 
-    unit: 'h' 
-  });
-
-  // console.log(auction);
-  
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ value: 0, unit: "m" });
 
   useEffect(() => {
     const calculateTimeLeft = (): TimeLeft => {
       const now = new Date();
       const endTime = new Date(auction.endTime!);
       const diffMs = endTime.getTime() - now.getTime();
-      
-      if (diffMs <= 0) {
-        return { value: 0, unit: 'h' };
+
+      if (diffMs <= 0) return { value: 0, unit: "m" };
+
+      const totalMinutes = Math.floor(diffMs / (1000 * 60));
+      if (totalMinutes < 60) {
+        return { value: totalMinutes, unit: "m" };
       }
 
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      
-      if (diffHours < 24) {
-        return { value: diffHours, unit: 'h' };
-      } else {
-        const diffDays = Math.floor(diffHours / 24);
-        return { value: diffDays, unit: 'd' };
+      const totalHours = Math.floor(totalMinutes / 60);
+      if (totalHours < 24) {
+        return { value: totalHours, unit: "h" };
       }
+
+      const totalDays = Math.floor(totalHours / 24);
+      return { value: totalDays, unit: "d" };
     };
 
     setTimeLeft(calculateTimeLeft());
-    
+
     const interval = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
-    }, 60000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [auction.endTime]);
 
-  const isLessThan24h = timeLeft.unit === 'h' && timeLeft.value < 24;
+  const isUrgent = timeLeft.unit !== "d";
 
   return (
     <div
       className={`flex items-center justify-center text-[10px] font-light px-3 py-1 rounded-[16px] w-fit gap-1 ${
-        isLessThan24h ? "bg-primary-red text-white" : "bg-white text-primary"
+        isUrgent ? "bg-primary-red text-white" : "bg-white text-primary"
       }`}
     >
-      {timeLeft.value > 0 ? `${timeLeft.value}${timeLeft.unit}` : ''} 
+      {timeLeft.value > 0 ? `${timeLeft.value}${timeLeft.unit}` : "Ended"}
       <ClockFading size={10} />
     </div>
   );

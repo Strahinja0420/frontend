@@ -1,4 +1,5 @@
 import React from "react";
+import { Users } from "../../hooks/getCurrentUser";
 
 interface StatCardProps {
   title: string;
@@ -6,7 +7,8 @@ interface StatCardProps {
   value: string | number;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, subtitle, value }) => {
+
+const StatCard: React.FC<StatCardProps> = ({ title, subtitle, value}) => {
   return (
     <div className="flex flex-col h-full p-3 pb-0 bg-white rounded-lg shadow-sm group hover:bg-black">
       <div className="flex-grow">

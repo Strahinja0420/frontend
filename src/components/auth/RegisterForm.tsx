@@ -20,29 +20,15 @@ const registrationSchema = z
     path: ["repeatPassword"],
   });
 
-export type RegistrationPayload = Omit<z.infer<typeof registrationSchema>, 'repeatPassword'>;
+export type RegistrationPayload = Omit<
+  z.infer<typeof registrationSchema>,
+  "repeatPassword"
+>;
 
 type FormFields = z.infer<typeof registrationSchema>;
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log(data);
-    
-    try {
-      const {repeatPassword, ...registrationSchema} = data;
-
-      await registerAPI.register(registrationSchema);
-      console.log(data);
-      navigate("/profile");
-    } catch (error) {
-      setError("root", {
-        type: "manual",
-        message: "Invalid information",
-      });
-    }
-  };
 
   const {
     register,
@@ -56,8 +42,40 @@ const RegisterForm = () => {
       password: "",
     },
   });
+
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    console.log("Form submitted:", data);
+
+    try {
+      const { repeatPassword, ...registrationData } = data;
+
+      const response = await registerAPI.register(registrationData);
+      // console.log("Full registration response:", response);
+
+      /* console.log("response.token:", response.token);
+    console.log("response.access_token:", response.access_token);
+    console.log("response.data:", response.data); */
+
+      const token = response.access_token;
+
+      if (!token) {
+        throw new Error("No token received from server");
+      }
+
+      localStorage.setItem("token", token);
+
+      navigate("/profile");
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("root", {
+        type: "manual",
+        message: "Registration failed. Please try again.",
+      });
+    }
+  };
+
   return (
-    <div className="register-form w-1/4 bg-white px-[8px] py-[16px] shadow-lg flex flex-col items-center h-full gap-[16px]">
+    <div className="register-form w-1/4 bg-white px-[8px] py-[16px] shadow-lg flex flex-col items-center h-full gap-[16px] overflow-auto">
       <Link to={"/"}>
         <img className="px-[8px] py-[16px]" src="src/assets/images/Logo.png" />
       </Link>
@@ -72,6 +90,12 @@ const RegisterForm = () => {
             Please enter your details
           </p>
         </div>
+
+        {/* Display root errors */}
+        {errors.root && (
+          <div className="text-center text-red-500">{errors.root.message}</div>
+        )}
+
         <div className="flex w-full gap-4">
           <div className="flex flex-col min-w-0 gap-1">
             <p>Name</p>
@@ -137,7 +161,8 @@ const RegisterForm = () => {
 
         <button
           type="submit"
-          className="w-full text-primary font-bold px-[16px] py-[8px] rounded-[16px] bg-(--primary-yellow) hover:bg-(--hover-yellow) cursor-pointer "
+          disabled={isSubmitting}
+          className="w-full text-primary font-bold px-[16px] py-[8px] rounded-[16px] bg-(--primary-yellow) hover:bg-(--hover-yellow) cursor-pointer disabled:opacity-50"
         >
           {isSubmitting ? "Signing up..." : "Sign up"}
         </button>

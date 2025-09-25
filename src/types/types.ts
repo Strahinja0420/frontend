@@ -9,26 +9,29 @@ export interface Auction {
 
   images: string;
 
+  currentBid? : number;
+
   endTime?: string;
+  startTime?: string;
 
   edit?: boolean;
 
   description: string;
 
-  bids: Bid[];
+  bids?: Bid[];
 
   status : string;
 
   highestBidder : number;
 
-  creator: {
+  creator?: {
     id: number;
     username: null;
     firstName: string;
     lastName: string;
   };
 
-  _count: {
+  _count?: {
     createdAuctions: number;
     bids: number;
   };
