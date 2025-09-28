@@ -46,16 +46,16 @@ const AuctionComponent = () => {
     loadAuction();
   }, [auctionId]);
 
-  // console.log(auction);
-
   useEffect(() => {
     if (!auction?.bids?.length) return;
 
     const fetchAllBidders = async () => {
       try {
         const bidderIdsToFetch = auction.bids
-          .filter((bid) => !bid.bidder && bid.bidderId)
-          .map((bid) => bid.bidderId);
+          ? auction.bids
+              .filter((bid) => !bid.bidder && bid.bidderId)
+              .map((bid) => bid.bidderId)
+          : [];
 
         if (bidderIdsToFetch.length === 0) return;
 
@@ -67,17 +67,19 @@ const AuctionComponent = () => {
         setAuction((prev) => {
           if (!prev) return null;
 
-          const updatedBids = prev.bids.map((bid) => {
-            if (!bid.bidder && bid.bidderId) {
-              const foundBidder = fetchedBidders.find(
-                (b) => b.id === bid.bidderId
-              );
-              if (foundBidder) {
-                return { ...bid, bidder: foundBidder };
-              }
-            }
-            return bid;
-          });
+          const updatedBids = prev.bids
+            ? prev.bids.map((bid) => {
+                if (!bid.bidder && bid.bidderId) {
+                  const foundBidder = fetchedBidders.find(
+                    (b) => b.id === bid.bidderId
+                  );
+                  if (foundBidder) {
+                    return { ...bid, bidder: foundBidder };
+                  }
+                }
+                return bid;
+              })
+            : [];
 
           return { ...prev, bids: updatedBids };
         });
@@ -92,8 +94,6 @@ const AuctionComponent = () => {
 
     fetchAllBidders();
   }, [auction?.bids]);
-
-  // console.log(bidderInfo);
 
   const {
     register,
@@ -145,17 +145,25 @@ const AuctionComponent = () => {
     }
   };
 
-  if (!auction) return <div className="p-4">No auction found</div>;
+  if (!auction) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg">
+          {error ? `Error: ${error}` : "Loading auction..."}
+        </div>
+      </div>
+    );
+  }
 
   const getHoursDifference = (startTime: Date, endTime: Date): number =>
     (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60);
 
   const currentTime = new Date();
-  if (!auction.endTime) {
-    throw new Error("Date string cannot be undefined");
-  }
-  const endTime = new Date(auction.endTime);
-  const isAuctionActive = currentTime < endTime;
+  const endTime = auction.endTime ? new Date(auction.endTime) : null;
+  const isAuctionActive = endTime ? currentTime < endTime : false;
+
+  const bidCount = auction._count?.bids ?? auction.bids?.length ?? 0;
+  const bids = auction.bids || [];
 
   if (error) {
     console.log(error);
@@ -168,31 +176,38 @@ const AuctionComponent = () => {
         style={{ height: "calc(100vh - 100px)" }}
       >
         <div className="flex h-full w-full pl-6 row-span-5 rounded-[16px]">
-          <img
-            className="self-center justify-self-center h-full w-full rounded-[16px]"
-            src={`http://localhost:5000/auctions/getimage/${auction.images}`}
-            alt=""
-          />
+          {auction.images ? (
+            <img
+              className="self-center justify-self-center h-full w-full rounded-[16px]"
+              src={`http://localhost:5000/auctions/getimage/${auction.images}`}
+              alt={auction.title || "Auction image"}
+            />
+          ) : (
+            <div className="self-center justify-self-center h-full w-full rounded-[16px] bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-500">No image available</span>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col w-full h-full row-span-2 bg-white rounded-[16px] overflow-visible ">
-          <div className="px-3 pt-3 ">
+          <div className="flex flex-col items-stretch h-full px-3 pt-3">
             <div className="flex items-center justify-between w-full">
-              {" "}
               <OutbidSmall auction={auction} />
-              <SmallTimeTag auction={auction}/>
+              <SmallTimeTag auction={auction} />
             </div>
 
             <p className="text-[32px] font-bold text-black pt-1">
-              {auction.title}
+              {auction.title || "Untitled Auction"}
             </p>
 
             <p className="text-[16px] font-light text-black pt-1">
-              {auction.description}
+              {auction.description || "No description available"}
             </p>
 
-            {auction.status === "ENDED" ? (
-              <div className="flex items-center justify-center w-full h-full text-center text-[16px] font-bold">You cant bid on this auction anymore.</div>
+            {auction.status === "ENDED" || !isAuctionActive ? (
+              <div className="flex items-center justify-center w-full h-full text-center text-[16px] font-bold">
+                You can't bid on this auction anymore.
+              </div>
             ) : (
               <>
                 <div className="flex pt-2 ">
@@ -220,7 +235,7 @@ const AuctionComponent = () => {
                   </div>
                 </div>
 
-                <div className="flex items-end justify-end pt-3 ">
+                <div className="flex items-end justify-end h-full pt-3 pb-2">
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <label className="pr-2">Bid:</label>
                     <input
@@ -235,9 +250,10 @@ const AuctionComponent = () => {
                     )}
                     <button
                       type="submit"
-                      className="primary-yellow-bg text-primary font-medium px-[16px] py-[8px] rounded-[16px] hover:bg-yellow-400 hover:cursor-pointer"
+                      disabled={isSubmitting}
+                      className="primary-yellow-bg text-primary font-medium px-[16px] py-[8px] rounded-[16px] hover:bg-yellow-400 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Place bid
+                      {isSubmitting ? "Placing..." : "Place bid"}
                     </button>
                   </form>
                 </div>
@@ -248,31 +264,39 @@ const AuctionComponent = () => {
 
         <div className="flex  h-full row-span-3 bg-white rounded-[16px]">
           <div className="w-full p-3">
-            <p className="text-[32px] font-bold pb-2">{`Bidding history(${auction._count.bids})`}</p>
-            {auction.bids.map((bid) => (
-              <div key={bid.id} className="pb-3 ">
-                <div className="flex items-center justify-between">
-                  <div>
-                    {bid.bidder ? (
-                      <p className="text-[16px] font-light text-black">
-                        {bid.bidder.firstName} {bid.bidder.lastName}
-                      </p>
-                    ) : (
-                      <p className="text-sm text-gray-400">
-                        Loading bidder info...
-                      </p>
-                    )}
+            <p className="text-[32px] font-bold pb-2">
+              {`Bidding history(${bidCount})`}
+            </p>
+            {bids.length > 0 ? (
+              bids.map((bid) => (
+                <div key={bid.id} className="pb-3 ">
+                  <div className="grid grid-cols-3 gap-4 content-evenly">
+                    <div>
+                      {bid.bidder ? (
+                        <p className="text-[16px] font-light text-black">
+                          {bid.bidder.firstName || ""}{" "}
+                          {bid.bidder.lastName || ""}
+                        </p>
+                      ) : (
+                        <p className="text-sm text-gray-400">
+                          Loading bidder info...
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {bid.createdAt
+                        ? format(new Date(bid.createdAt), "HH:mm dd.MM.yyyy")
+                        : "Unknown time"}
+                    </div>
+                    <p className="primary-yellow-bg text-[16px] font-semibold px-[14px] py-[4px] rounded-[16px] min-w-[100px] text-center">
+                      {bid.amount?.toFixed(2) || "0.00"}€
+                    </p>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    {format(new Date(bid.createdAt), "HH:mm dd.MM.yyyy")}
-                  </div>
-                  <p className="primary-yellow-bg text-[16px] font-semibold px-[14px] py-[4px] rounded-[16px] min-w-[100px] text-center">
-                    {bid.amount.toFixed(2)}€
-                  </p>
                 </div>
-              </div>
-            ))}
-            <p></p>
+              ))
+            ) : (
+              <p className="py-4 text-center text-gray-500">No bids yet</p>
+            )}
           </div>
         </div>
       </div>

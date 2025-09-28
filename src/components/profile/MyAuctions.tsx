@@ -32,7 +32,7 @@ const MyAuctions = () => {
   return (
     <>
       {auction.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center h-[calc(100vh-200px)] ">
+        <div className="flex flex-col items-center justify-center h-full pt-6 text-center ">
           <p className="text-center text-[32px] font-bold text-(--text-primary)">
             Oh no, no auctions added!
           </p>

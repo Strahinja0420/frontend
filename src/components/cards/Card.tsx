@@ -86,7 +86,7 @@ const Card: React.FC<AuctionCardProps> = ({
           {auction.title}
         </div>
         <div className="col-start-1 col-end-3 px-[8px] py-[4px]  text-primary font-bold">
-          {auction.startingBid}€
+          {auction.currentBid ? auction.currentBid : auction.startingBid}€
         </div>
         <div className="col-start-1 col-end-7 h-[150px] px-[8px] py-[4px]  text-primary">
           <Link className="hover:cursor-default" to={`/auction/${auction.id}`}>

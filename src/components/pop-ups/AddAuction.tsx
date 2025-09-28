@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { addAuctionAPI } from "../../api/addAuctionApi";
-import { Euro } from "lucide-react";
+import { Euro, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface AddAuctionProps {
   onClose?: () => void;
@@ -20,17 +21,33 @@ const AddAuctionSchema = z.object({
 type FormFields = z.infer<typeof AddAuctionSchema>;
 
 const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
+  const [preview, setPreview] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
+    watch,
+    resetField,
   } = useForm<FormFields>({
     resolver: zodResolver(AddAuctionSchema),
     defaultValues: {
       category: "OTHER",
     },
   });
+
+  const images = watch("images");
+
+  useEffect(() => {
+    if (images && images.length > 0) {
+      const file = images[0];
+      const url = URL.createObjectURL(file);
+      setPreview(url);
+
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [images]);
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     if (!data.images) {
@@ -60,6 +77,11 @@ const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
     }
   };
 
+  const resetPicture = () => {
+    resetField("images");
+    setPreview(null);
+  };
+
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-opacity-25 backdrop-blur-md ">
@@ -68,19 +90,42 @@ const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
             <h4 className="text-[23px] text-(--text-primary) font-bold self-start">
               Add auction
             </h4>
-            <div className="p-4 py-10 bg-(--light-gray) text-center rounded-[16px] border-0 w-full relative">
+            <div className="flex items-center justify-center p-4 pt-2 bg-(--light-gray) text-center rounded-[16px] border-0 w-full h-[200px] relative">
               <input
                 type="file"
+                accept="image/*"
                 {...register("images")}
                 id="image-upload"
-                className="absolute inset-0 w-full h-full opacity-0 "
+                className="hidden"
               />
-              <label
-                htmlFor="image-upload "
-                className="inline-block p-2 font-medium border-(--medium-gray) hover:cursor-pointer border-1 rounded-[16px] bg-(--light-gray) hover:scale-105"
-              >
-                Add image
-              </label>
+
+              {preview ? (
+                <>
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="absolute inset-0 w-full h-full object-contain rounded-[16px]  pointer-events-none"
+                  />
+                  <div className="flex content-end justify-end w-full h-full">
+                    <button
+                      type="button"
+                      onClick={resetPicture}
+                      className="cursor-pointer"
+                    >
+                      <div className="text-white bg-black px-4 py-2 rounded-[32px]">
+                        <Trash></Trash>
+                      </div>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <label
+                  htmlFor="image-upload"
+                  className="flex items-center justify-center w-[125px] h-[50px] border-2 border-black rounded-[32px] cursor-pointer bg-(--light-gray) hover:bg-gray-100 transition"
+                >
+                  Add Picture
+                </label>
+              )}
             </div>
 
             <div className="flex flex-col w-full gap-2">
@@ -116,20 +161,23 @@ const AddAuction: React.FC<AddAuctionProps> = ({ onClose }) => {
 
             <div className="flex w-full gap-4">
               <div className="flex flex-col gap-2">
-                <label className="self-start font-light" htmlFor="startingPrice">
+                <label
+                  className="self-start font-light"
+                  htmlFor="startingPrice"
+                >
                   Starting price
                 </label>
                 <div className="relative">
                   <input
-                  {...register("startingBid")}
-                  type="number"
-                  id="startingPrice"
-                  className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px] w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-(--text-gray) placeholder:font-light"
-                  placeholder="Price"
-                />
-                <div className="absolute text-(--text-gray) transform -translate-y-1/2 right-3 top-1/2 ">
-                  <Euro size={20}/>
-                </div>
+                    {...register("startingBid")}
+                    type="number"
+                    id="startingPrice"
+                    className="rounded-[16px] border-1 border-gray-200 p-2 max-h-[40px] min-h-[40px] w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-(--text-gray) placeholder:font-light"
+                    placeholder="Price"
+                  />
+                  <div className="absolute text-(--text-gray) transform -translate-y-1/2 right-3 top-1/2 ">
+                    <Euro size={20} />
+                  </div>
                 </div>
                 {errors.startingBid && (
                   <div className="text-red-500">
